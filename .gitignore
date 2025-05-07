@@ -21,3 +21,9 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+
+# custom
+_ignore
+access.log
+error.log
+TODO.todo
