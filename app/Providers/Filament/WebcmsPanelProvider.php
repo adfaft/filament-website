@@ -17,6 +17,7 @@ use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Jeffgreco13\FilamentBreezy\BreezyCore;
@@ -76,5 +77,13 @@ class WebcmsPanelProvider extends PanelProvider
                 ->enableBrowserSessions(condition: true) 
                 
             ]);
+    }
+
+    public function boot():void
+    {
+
+        // Gate::after(function ($user, $ability) {
+        //     return $user->hasRole('Super Admin'); // note this returns boolean
+        //  });
     }
 }

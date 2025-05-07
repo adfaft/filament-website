@@ -16,8 +16,13 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'name' => \config('webcms.admin.name'),
+            'email' => \config('webcms.admin.email'),
+            'password' => \config('webcms.admin.password'),
+        ]);
+
+        $this->call([
+            ShieldSeeder::class
         ]);
     }
 }
