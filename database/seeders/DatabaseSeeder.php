@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\ActiveStatusEnum;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -19,10 +20,11 @@ class DatabaseSeeder extends Seeder
             'name' => \config('webcms.admin.name'),
             'email' => \config('webcms.admin.email'),
             'password' => \config('webcms.admin.password'),
+            'status' => ActiveStatusEnum::ACTIVE,
         ]);
 
         $this->call([
-            ShieldSeeder::class
+            ShieldSeeder::class,
         ]);
     }
 }

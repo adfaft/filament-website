@@ -13,6 +13,8 @@ return new class extends Migration
     {
         // add soft deletes
         Schema::table('users', function (Blueprint $table) {
+            $table->timestamp('last_login')->nullable()->after('remember_token');
+            $table->tinyInteger('status')->default(0)->after('last_login');
             $table->softDeletes();
         });
     }
@@ -24,6 +26,8 @@ return new class extends Migration
     {
         //
         Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('last_login');
+            $table->dropColumn('status');
             $table->dropSoftDeletes();
         });
     }
