@@ -3,8 +3,8 @@
 namespace App\Filament\Resources;
 
 use App\Enums\ActiveStatusEnum;
-use App\Enums\EnabledStatusEnum;
 use App\Filament\Resources\UserResource\Actions\UserExporter;
+use App\Filament\Resources\UserResource\Actions\UserImporter;
 use App\Filament\Resources\UserResource\Pages;
 use App\Models\User;
 use App\Services\Password\PasswordRule;
@@ -21,6 +21,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\ExportAction;
 use Filament\Tables\Actions\ExportBulkAction;
+use Filament\Tables\Actions\ImportAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -109,13 +110,14 @@ class UserResource extends Resource
 
                         return Str::of($value)->replace('_', ' ')->title();
                     }),
-                TextColumn::make('totp_enabled')
+                TextColumn::make('is_otp_enabled')
                     ->badge()
                     ->toggleable()
-                    ->label('TOTP?')
-                    ->state(fn (User $user): string => EnabledStatusEnum::from((int) $user->is_otp_enabled)->getLabel())
-                    ->icon(fn (User $user): string => EnabledStatusEnum::from((int) $user->is_otp_enabled)->getIcon())
-                    ->color(fn (User $user) => EnabledStatusEnum::from((int) $user->is_otp_enabled)->getColor()),
+                    ->label('TOTP ?'),
+
+                TextColumn::make('status')
+                    ->badge()
+                    ->toggleable(),
 
                 TextColumn::make('last_login')
                     ->placeholder('-')
@@ -144,6 +146,8 @@ class UserResource extends Resource
                 ]),
             ])
             ->headerActions([
+                ImportAction::make()
+                    ->importer(UserImporter::class),
                 ExportAction::make()
                     ->exporter(UserExporter::class),
             ]);

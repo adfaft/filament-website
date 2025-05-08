@@ -2,12 +2,15 @@
 
 namespace App\Enums;
 
+use App\Services\Enums\EnumTrait;
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
 
 enum EnabledStatusEnum: int implements HasColor, HasIcon, HasLabel
 {
+    use EnumTrait;
+
     case ENABLED = 1;
     case DISABLED = 0;
 

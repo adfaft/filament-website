@@ -2,12 +2,15 @@
 
 namespace App\Enums;
 
+use App\Services\Enums\EnumTrait;
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
 
 enum ActiveStatusEnum: int implements HasColor, HasIcon, HasLabel
 {
+    use EnumTrait;
+
     case ACTIVE = 1;
     case INACTIVE = 0;
 

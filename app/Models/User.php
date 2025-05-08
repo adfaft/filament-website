@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Enums\ActiveStatusEnum;
+use App\Enums\EnabledStatusEnum;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -65,13 +66,14 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'status' => ActiveStatusEnum::class,
+            'is_otp_enabled' => EnabledStatusEnum::class,
         ];
     }
 
     protected function isOtpEnabled(): Attribute
     {
         return Attribute::make(
-            get: fn () => (bool) $this->breezy_session?->two_factor_confirmed_at
+            get: fn () => $this->castAttribute('is_otp_enabled', (int) ((bool) $this->breezy_session?->two_factor_confirmed_at))
         );
     }
 }

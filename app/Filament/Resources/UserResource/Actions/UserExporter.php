@@ -28,7 +28,7 @@ class UserExporter extends Exporter
                 ->enabledByDefault(false),
             ExportColumn::make('is_otp_enabled')
                 ->label('Is OTP Enabled?')
-                ->formatStateUsing(fn (string $state): string => $state ? 'yes' : 'no')
+                ->formatStateUsing(fn ($state) => $state->name)
                 ->enabledByDefault(false),
 
         ];
