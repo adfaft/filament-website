@@ -4,7 +4,7 @@ namespace App\Filament\Resources\UserResource\Actions;
 
 use App\Enums\ActiveStatusEnum;
 use App\Models\User;
-use App\Services\Password\PasswordRule;
+use App\Rules\PasswordRule;
 use Filament\Actions\Imports\Exceptions\RowImportFailedException;
 use Filament\Actions\Imports\ImportColumn;
 use Filament\Actions\Imports\Importer;

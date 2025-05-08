@@ -7,7 +7,7 @@ use App\Filament\Resources\UserResource\Actions\UserExporter;
 use App\Filament\Resources\UserResource\Actions\UserImporter;
 use App\Filament\Resources\UserResource\Pages;
 use App\Models\User;
-use App\Services\Password\PasswordRule;
+use App\Rules\PasswordRule;
 use App\Support\Facades\Date;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Section;

@@ -4,6 +4,11 @@ namespace App\Services\Enums;
 
 use ValueError;
 
+/**
+ * General Purpose Trait for BackendEnum
+ *
+ * ref: https://laracasts.com/discuss/channels/laravel/enum-validation-rules-only-works-by-backedenum-interface
+ */
 trait EnumTrait
 {
     public static function all()

@@ -2,7 +2,7 @@
 
 Website based on filament
 
-## Requirement
+## Requirementa
 
 - Laravel 12
 - PHP 8.4
@@ -10,8 +10,7 @@ Website based on filament
 
 ## Features
 
-- User Management
-  - Multiple User with Multiple Roles : Admin, Editor, Contributor, Guest
+- User Management (features/user_management.md)[features/user_management.md]
 - Post & Page Management
   - Include revisions
   - multiple languages
@@ -23,6 +22,14 @@ Website based on filament
   - publish date
   - review
 - Templating
+
+## Installation
+- fill in the environment variables from .env.example, especially for `APP_URL`, all `DB_*` configuration, first super admin `ADMIN_*`
+- run `php artisan key:generate` to generate `APP_KEY`
+- run `php artisan migrate:fresh --seed` to install based on seeder
+- run `php artisan make:filament-user` to create a new user for filament
+- run `php artisan shield:super-admin --user=[id]` and assign that user id as the first admin
+
 
 ## Library
 - Filament Plugins
