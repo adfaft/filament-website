@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Services\Password\PasswordRule;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -70,7 +71,7 @@ class WebcmsPanelProvider extends PanelProvider
                         // slug: 'my-profile' // Sets the slug for the profile page (default = 'my-profile')
                     )
                     ->passwordUpdateRules(
-                        rules: [Password::default()->mixedCase()->min(8)->uncompromised(3)], // you may pass an array of validation rules as well. (default = ['min:8'])
+                        rules: [PasswordRule::default_rule()], // you may pass an array of validation rules as well. (default = ['min:8'])
                         requiresCurrentPassword: true, // when false, the user can update their password without entering their current password. (default = true)
                     )
                     ->enableTwoFactorAuthentication()

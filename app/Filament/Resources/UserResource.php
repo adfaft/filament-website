@@ -6,6 +6,7 @@ use App\Enums\ActiveStatusEnum;
 use App\Enums\EnabledStatusEnum;
 use App\Filament\Resources\UserResource\Pages;
 use App\Models\User;
+use App\Services\Password\PasswordRule;
 use App\Support\Facades\Date;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Section;
@@ -36,13 +37,20 @@ class UserResource extends Resource
                 //
                 Split::make([
                     Section::make([
-                        TextInput::make('name'),
-                        TextInput::make('email'),
+                        TextInput::make('name')
+                            ->required(),
+                        TextInput::make('email')->email()
+                            ->required(),
 
                         Section::make([
-                            TextInput::make('password')->password(),
-                            TextInput::make('password_confirmation')->password()
-                                ->label('Password Confirmation'),
+                            TextInput::make('password')->password()->revealable()
+                                ->dehydrated(fn (?string $state): bool => filled($state))
+                                ->required(fn (string $operation): bool => $operation === 'create')
+                                ->rule([PasswordRule::default_rule(), 'confirmed']),
+                            TextInput::make('password_confirmation')->password()->revealable()
+                                ->label('Password Confirmation')
+                                ->requiredWith('password')
+                                ->rule([PasswordRule::default_rule()]),
                         ])
                             ->compact()
                             ->hidden(fn (string $operation) => $operation === 'view'),
@@ -58,7 +66,7 @@ class UserResource extends Resource
                             ->hidden(fn (string $operation) => $operation === 'create'),
 
                         Placeholder::make('last_login')->label('Last Login:')
-                            ->content(fn (User $user) => Date::localize($user->last_login))
+                            ->content(fn (User $user) => ! $user->last_login ? '-' : Date::localize($user->last_login))
                             ->hidden(fn (string $operation) => $operation === 'create'),
 
                         Toggle::make('totp_enabled')
@@ -70,6 +78,7 @@ class UserResource extends Resource
                             ->hidden(fn (string $operation) => $operation !== 'view'),
 
                         Select::make('user_role')
+                            ->required()
                             ->relationship(name: 'roles', titleAttribute: 'name'),
 
                         ToggleButtons::make('status')
@@ -106,6 +115,7 @@ class UserResource extends Resource
                     ->color(fn (User $user) => EnabledStatusEnum::from((int) $user->is_otp_enabled)->getColor()),
 
                 TextColumn::make('last_login')
+                    ->placeholder('-')
                     ->formatStateUsing(fn ($state) => Date::localize($state)),
                 TextColumn::make('created_at')
                     ->formatStateUsing(fn ($state) => Date::localize($state))
