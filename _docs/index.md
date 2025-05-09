@@ -11,6 +11,7 @@ Website based on filament
 ## Features
 
 - User Management (features/user_management.md)[features/user_management.md]
+- Settings Page (features/settings_management.md)[features/settings_management.md]
 - Post & Page Management
   - Include revisions
   - multiple languages
@@ -29,6 +30,14 @@ Website based on filament
 - run `php artisan migrate:fresh --seed` to install based on seeder
 - run `php artisan make:filament-user` to create a new user for filament
 - run `php artisan shield:super-admin --user=[id]` and assign that user id as the first admin
+
+## Commands
+
+Read Full Documentation Here : (commands.md)[commands.md]
+
+## Advanced Configuration
+
+Read Full Documentation Here : (advanced.md)[advanced.md]
 
 
 ## Library
@@ -50,7 +59,11 @@ Website based on filament
   - Menu Builder
   [https://filamentphp.com/plugins/datlechin-menu-builder#model-menu-panel](https://filamentphp.com/plugins/datlechin-menu-builder#model-menu-panel)
 
-
-
-
+- Other
+  - Spatie Settings
+  [https://github.com/spatie/laravel-settings](https://github.com/spatie/laravel-settings)
+  - Spatie Tags
+  [https://spatie.be/docs/laravel-tags/v4/introduction](https://spatie.be/docs/laravel-tags/v4/introduction)
+  - Spatie Translatable
+  [https://spatie.be/docs/laravel-translatable/v6/introduction](https://spatie.be/docs/laravel-translatable/v6/introduction)
 

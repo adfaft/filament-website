@@ -7,5 +7,5 @@ return [
         'password' => \env('ADMIN_PASSWORD'),
     ],
 
-    'timezone_local' => \env('TIMEZONE_LOCAL', 'Asia/Jakarta'),
+    'timezone_local' => \env('TIMEZONE_LOCAL', 'UTC'),
 ];
