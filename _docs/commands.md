@@ -6,6 +6,9 @@ Filament User
 - `php artisan make:filament-user`
 - `php artisan shield:super-admin --user=[id]`
 
+Filament Resources
+- `php artisan make:filament-resource Customer`
+
 
 Filament Setting
 - `php artisan make:setting [SettingName] --group=[groupName]` to create Spatie Settings Class

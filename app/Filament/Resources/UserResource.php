@@ -8,6 +8,7 @@ use App\Filament\Resources\UserResource\Actions\UserImporter;
 use App\Filament\Resources\UserResource\Pages;
 use App\Models\User;
 use App\Rules\PasswordRule;
+use App\Settings\GeneralSettings;
 use App\Support\Facades\Date;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Section;
@@ -100,6 +101,8 @@ class UserResource extends Resource
 
     public static function table(Table $table): Table
     {
+        $timezone = app(GeneralSettings::class)->timezone_default;
+
         return $table
             ->columns([
                 TextColumn::make('name'),
@@ -113,7 +116,7 @@ class UserResource extends Resource
                 TextColumn::make('is_otp_enabled')
                     ->badge()
                     ->toggleable()
-                    ->label('TOTP ?'),
+                    ->label('TOTP'),
 
                 TextColumn::make('status')
                     ->badge()
@@ -121,12 +124,12 @@ class UserResource extends Resource
 
                 TextColumn::make('last_login')
                     ->placeholder('-')
-                    ->formatStateUsing(fn ($state) => Date::localize($state)),
+                    ->dateTime(timezone: $timezone, format: 'd F Y H:i'),
                 TextColumn::make('created_at')
-                    ->formatStateUsing(fn ($state) => Date::localize($state))
+                    ->dateTime(timezone: $timezone, format: 'd F Y H:i')
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
-                    ->formatStateUsing(fn ($state) => Date::localize($state))
+                    ->dateTime(timezone: $timezone, format: 'd F Y H:i')
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
