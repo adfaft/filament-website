@@ -86,5 +86,6 @@ class WebcmsPanelProvider extends PanelProvider
         // Gate::after(function ($user, $ability) {
         //     return $user->hasRole('Super Admin'); // note this returns boolean
         //  });
+
     }
 }

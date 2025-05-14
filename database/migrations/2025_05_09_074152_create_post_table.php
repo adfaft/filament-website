@@ -24,6 +24,7 @@ return new class extends Migration
             $table->tinyInteger('status');
             $table->dateTime('published_at')->nullable();
             $table->json('meta');
+            $table->softDeletes();
         });
     }
 

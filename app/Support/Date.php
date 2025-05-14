@@ -8,6 +8,18 @@ use DateTimeZone;
 
 class Date
 {
+    private static ?DateTimeZone $timezone_default;
+
+    public function __construct()
+    {
+        self::$timezone_default = new DateTimeZone(\date_default_timezone_get());
+    }
+
+    public static function set_timezone_default(DateTimeZone $timezone): void
+    {
+        self::$timezone_default = $timezone;
+    }
+
     /**
      * Localize date based on datetime and timezone
      *
@@ -15,7 +27,7 @@ class Date
      */
     public function localize(DateTimeInterface|string $date_time, ?string $time_zone = null): CarbonImmutable
     {
-        $time_zone = new DateTimeZone($time_zone ?? date_default_timezone_get());
+        $time_zone = $time_zone ? new DateTimeZone($time_zone) : self::$timezone_default;
         if (is_string($date_time)) {
             $date_time = CarbonImmutable::parse($date_time);
         }

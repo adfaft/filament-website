@@ -31,4 +31,9 @@ trait EnumTrait
     {
         return defined("self::$name") ? constant("self::$name") : null;
     }
+
+    public static function forSelect(): array
+    {
+        return array_column(self::cases(), 'name', 'value');
+    }
 }

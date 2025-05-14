@@ -5,9 +5,14 @@ namespace App\Models;
 use App\Enums\LanguageEnum;
 use App\Enums\PublishStatusEnum;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Tags\HasTags;
 
 class Post extends Model
 {
+    use HasTags;
+    use SoftDeletes;
+
     /**
      * The attributes that are NOT mass assignable.
      *

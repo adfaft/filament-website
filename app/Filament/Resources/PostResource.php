@@ -15,6 +15,7 @@ use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\SpatieTagsInput;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Textarea;
@@ -22,7 +23,10 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\SpatieTagsColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Spatie\Tags\Tag;
 
 class PostResource extends Resource
 {
@@ -78,11 +82,9 @@ class PostResource extends Resource
                                         Select::make('status')
                                             ->options(PublishStatusEnum::class)
                                             ->default(PublishStatusEnum::DRAFT),
-                                    ])
-                                    ->columns(1),
+                                    ]),
 
                                 Section::make()
-                                    ->label('Translation')
                                     ->schema([
                                         Select::make('lang')
                                             ->label('Language')
@@ -92,7 +94,17 @@ class PostResource extends Resource
 
                                         TextInput::make('translation'),
 
-                                    ])->columns(1),
+                                    ]),
+
+                                Section::make()
+                                    ->schema([
+                                        SpatieTagsInput::make('category')
+                                            ->placeholder('New category')
+                                            ->type('category'),
+
+                                        SpatieTagsInput::make('tags')
+                                            ->type('tags'),
+                                    ]),
 
                             ])->columnSpan(1),
                     ])
@@ -149,12 +161,28 @@ class PostResource extends Resource
                 Tables\Columns\TextColumn::make('lang')
                     ->badge()
                     ->searchable(),
+                SpatieTagsColumn::make('category')
+                    ->type('category')
+                    ->placeholder('-'),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
                     ->sortable(),
             ])
             ->filters([
-                //
+                Tables\Filters\TrashedFilter::make(),
+                Tables\Filters\SelectFilter::make('status')
+                    ->options(PublishStatusEnum::forSelect()),
+                Tables\Filters\SelectFilter::make('lang')
+                    ->label('Language')
+                    ->options(LanguageEnum::forSelect()),
+                Tables\Filters\SelectFilter::make('category')
+                    ->options(Tag::where('type', 'category')->get()->pluck('name', 'name'))
+                    ->query(fn (Builder $query, array $data) => $query
+                        ->when(
+                            $data['value'],
+                            fn (Builder $query, $value) => $query->withAnyTags([$value], 'category')
+                        )
+                    ),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
