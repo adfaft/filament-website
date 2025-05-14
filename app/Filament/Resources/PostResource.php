@@ -43,6 +43,14 @@ class PostResource extends Resource
             ->schema([
 
                 Grid::make()
+                    ->columns([
+                        'default' => 1,
+                        'sm' => 4,
+                        'md' => 4,
+                        'lg' => 4,
+                        'xl' => 4,
+                        '2xl' => 4,
+                    ])
                     ->schema([
                         Section::make([
                             Forms\Components\TextInput::make('title')
@@ -80,16 +88,32 @@ class PostResource extends Resource
                                             ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'It will automatically publish if the vaue set to the future and status equals SCHEDULE'),
 
                                         Select::make('status')
-                                            ->options(PublishStatusEnum::class)
-                                            ->default(PublishStatusEnum::DRAFT),
+                                            ->options(function () {
+                                                return \collect(PublishStatusEnum::cases())->mapWithKeys(function ($item) {
+                                                    return [
+                                                        $item->value => view('webcms.components.enum-with-icon', ['item' => $item])->render(),
+                                                    ];
+                                                })->toArray();
+                                            })
+                                            ->default(PublishStatusEnum::DRAFT)
+                                            ->allowHtml()
+                                            ->native(false),
                                     ]),
 
                                 Section::make()
                                     ->schema([
                                         Select::make('lang')
                                             ->label('Language')
-                                            ->options(LanguageEnum::class)
+                                            ->options(function () {
+                                                return \collect(LanguageEnum::cases())->mapWithKeys(function ($item) {
+                                                    return [
+                                                        $item->value => view('webcms.components.enum-with-icon', ['item' => $item])->render(),
+                                                    ];
+                                                })->toArray();
+                                            })
                                             ->default(LanguageEnum::ID->value)
+                                            ->allowHtml()
+                                            ->native(false)
                                             ->required(),
 
                                         TextInput::make('translation'),
@@ -107,14 +131,6 @@ class PostResource extends Resource
                                     ]),
 
                             ])->columnSpan(1),
-                    ])
-                    ->columns([
-                        'default' => 1,
-                        'sm' => 4,
-                        'md' => 4,
-                        'lg' => 4,
-                        'xl' => 4,
-                        '2xl' => 4,
                     ]),
 
                 Tabs::make()
