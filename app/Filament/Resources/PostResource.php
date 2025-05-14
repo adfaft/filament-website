@@ -21,12 +21,16 @@ use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\SpatieTagsColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
 use Spatie\Tags\Tag;
+use Webbingbrasil\FilamentCopyActions\Forms\Actions\CopyAction;
 
 class PostResource extends Resource
 {
@@ -54,12 +58,25 @@ class PostResource extends Resource
                     ->schema([
                         Section::make([
                             Forms\Components\TextInput::make('title')
-                                ->required(),
+                                ->required()
+                                ->live(debounce: 600)
+                                ->afterStateUpdated(function (Set $set, Get $get, $operation, $state) {
+                                    if (empty($get('slug')) || $operation === 'create') {
+                                        $set('slug', Str::slug($state));
+                                    }
+                                }),
                             Forms\Components\TextInput::make('slug')
-                                ->required(),
+                                ->hiddenLabel('Slug')
+                                ->required()
+                                ->prefix(url('/').'/')
+                                ->extraFieldWrapperAttributes(['class' => '-mt-4'])
+                                ->extraAttributes(['style' => 'border: none !important; background-color: transparent; box-shadow: none'])
+                                ->suffixAction(CopyAction::make()),
 
                             Forms\Components\Textarea::make('excerpt')
-                                ->columnSpanFull(),
+                                ->columnSpanFull()
+                                ->hint(fn ($state) => strlen($state).'/140')
+                                ->live(),
 
                             RichEditor::make('content')
                                 ->columnSpanFull(),
@@ -138,10 +155,14 @@ class PostResource extends Resource
                         Tabs\Tab::make('SEO')
                             ->schema([
                                 TextInput::make('meta.seo.title')
-                                    ->label('Title'),
+                                    ->label('Title')
+                                    ->hint(fn ($state) => strlen($state).'/65')
+                                    ->live(),
 
                                 Textarea::make('meta.seo.description')
-                                    ->label('Description'),
+                                    ->label('Description')
+                                    ->hint(fn ($state) => strlen($state).'/120')
+                                    ->live(),
 
                                 TagsInput::make('meta.seo.keywords')
                                     ->label('Keywords'),
