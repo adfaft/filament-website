@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Enums\LanguageEnum;
 use App\Enums\PublishStatusEnum;
+use App\Filament\Components\Forms\SpatieMediaLibraryFileUpload;
 use App\Filament\Resources\PostResource\Pages;
 use App\Models\Post;
 use App\Settings\GeneralSettings;
@@ -28,7 +29,12 @@ use Filament\Tables;
 use Filament\Tables\Columns\SpatieTagsColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Tags\Tag;
 use Webbingbrasil\FilamentCopyActions\Forms\Actions\CopyAction;
 
@@ -79,7 +85,31 @@ class PostResource extends Resource
                                 ->live(),
 
                             RichEditor::make('content')
+                                ->extraInputAttributes(['style' => 'max-height: 80vh; overflow-y: auto'])
                                 ->columnSpanFull(),
+
+
+                            Grid::make()
+                            ->columns([
+                                'default' => 1,
+                                'sm' => 2,
+                                'md' => 3,
+                                'lg' => 3,
+                                'xl' => 3,
+                                '2xl' => 3,
+                            ])
+                            ->schema([
+
+                                SpatieMediaLibraryFileUpload::make('meta.featured_image.mobile')
+                                ->label('Featured Image')
+                                ->helperText("Recommended 800x600 (4:3)")
+                                ,
+
+                                SpatieMediaLibraryFileUpload::make('meta.featured_image.desktop')
+                                ->label('Featured Image (Desktop) - Optional')
+                                ->helperText("Recommended 1600x900 (16:9)")
+                                ,
+                            ]),
 
                         ])
                             ->columnSpan(3),
@@ -154,18 +184,30 @@ class PostResource extends Resource
                     ->tabs([
                         Tabs\Tab::make('SEO')
                             ->schema([
-                                TextInput::make('meta.seo.title')
+
+                                Grid::make()
+                                ->columns(2)
+                                ->schema([
+                                    TextInput::make('meta.seo.title')
                                     ->label('Title')
                                     ->hint(fn ($state) => strlen($state).'/65')
                                     ->live(),
 
-                                Textarea::make('meta.seo.description')
-                                    ->label('Description')
-                                    ->hint(fn ($state) => strlen($state).'/120')
-                                    ->live(),
+                                    TagsInput::make('meta.seo.keywords')
+                                        ->label('Keywords'),
 
-                                TagsInput::make('meta.seo.keywords')
-                                    ->label('Keywords'),
+                                    Textarea::make('meta.seo.description')
+                                        ->label('Description')
+                                        ->hint(fn ($state) => strlen($state).'/120')
+                                        ->live(),
+
+                                    
+
+                                    SpatieMediaLibraryFileUpload::make('meta.seo.image')
+                                        ->label('Image - Optional')
+                                        ->helperText("Recommended 1200x630")
+                                ])
+                                
                             ]),
                     ])->columnSpanFull(),
 
@@ -227,6 +269,8 @@ class PostResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\ForceDeleteBulkAction::make()
+                    ->requiresConfirmation(),
                 ]),
             ]);
     }

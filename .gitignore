@@ -27,3 +27,4 @@ _ignore
 access.log
 error.log
 TODO.todo
+public/media
