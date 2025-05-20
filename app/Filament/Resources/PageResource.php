@@ -7,7 +7,7 @@ use App\Enums\PostTypeEnum;
 use App\Enums\PublishStatusEnum;
 use App\Filament\Components\Forms\Helper\TitleAndSlug;
 use App\Filament\Components\Forms\SpatieMediaLibraryFileUpload;
-use App\Filament\Resources\PostResource\Pages;
+use App\Filament\Resources\PageResource\Pages;
 use App\Models\Post;
 use App\Settings\GeneralSettings;
 use App\Support\Facades\Date;
@@ -26,25 +26,23 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\SpatieTagsColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Spatie\Tags\Tag;
 
-class PostResource extends Resource
+class PageResource extends Resource
 {
     protected static ?string $model = Post::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $label = 'Page';
+
     public static function form(Form $form): Form
     {
-
         $timezone = \app(GeneralSettings::class)->timezone_default;
 
         return $form
             ->schema([
-
                 Grid::make()
                     ->columns([
                         'default' => 1,
@@ -56,6 +54,7 @@ class PostResource extends Resource
                     ])
                     ->schema([
                         Section::make([
+
                             ...TitleAndSlug::make(titleInputName: 'title', slugInputName: 'slug'),
 
                             Forms\Components\Textarea::make('excerpt')
@@ -187,11 +186,11 @@ class PostResource extends Resource
                     ])->columnSpanFull(),
 
             ]);
+
     }
 
     public static function table(Table $table): Table
     {
-
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('created_at')
@@ -214,9 +213,6 @@ class PostResource extends Resource
                 Tables\Columns\TextColumn::make('lang')
                     ->badge()
                     ->searchable(),
-                SpatieTagsColumn::make('category')
-                    ->type('category')
-                    ->placeholder('-'),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
                     ->sortable(),
@@ -228,14 +224,6 @@ class PostResource extends Resource
                 Tables\Filters\SelectFilter::make('lang')
                     ->label('Language')
                     ->options(LanguageEnum::forSelect()),
-                Tables\Filters\SelectFilter::make('category')
-                    ->options(Tag::where('type', 'category')->get()->pluck('name', 'name'))
-                    ->query(fn (Builder $query, array $data) => $query
-                        ->when(
-                            $data['value'],
-                            fn (Builder $query, $value) => $query->withAnyTags([$value], 'category')
-                        )
-                    ),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -259,14 +247,14 @@ class PostResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListPosts::route('/'),
-            'create' => Pages\CreatePost::route('/create'),
-            'edit' => Pages\EditPost::route('/{record}/edit'),
+            'index' => Pages\ListPages::route('/'),
+            'create' => Pages\CreatePage::route('/create'),
+            'edit' => Pages\EditPage::route('/{record}/edit'),
         ];
     }
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->where('post_type', PostTypeEnum::POST);
+        return parent::getEloquentQuery()->where('post_type', PostTypeEnum::PAGE);
     }
 }

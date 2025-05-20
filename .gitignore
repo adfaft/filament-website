@@ -28,3 +28,6 @@ access.log
 error.log
 TODO.todo
 public/media
+*.code-workspace
+
+

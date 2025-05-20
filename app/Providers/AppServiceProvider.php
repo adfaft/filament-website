@@ -35,7 +35,6 @@ class AppServiceProvider extends ServiceProvider
             'post' => \App\Models\Post::class,
         ]);
 
-
         // DB::listen(function(QueryExecuted $query){
         //     Log::info($query->toRawSql());
         // });

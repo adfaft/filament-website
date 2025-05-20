@@ -23,15 +23,6 @@ class Post extends Model implements HasMedia
      */
     protected $guarded = [];
 
-    protected $attributes = [
-        'status' => 0,
-        'lang' => '',
-        'translation' => '{}',
-        'meta' => '{}',
-        'custom' => '{}',
-
-    ];
-
     /**
      * Get the attributes that should be cast.
      *
@@ -41,7 +32,6 @@ class Post extends Model implements HasMedia
     {
         return [
             'lang' => LanguageEnum::class,
-            'translation' => 'json',
             'status' => PublishStatusEnum::class,
             'published_at' => 'datetime',
             'meta' => 'json',

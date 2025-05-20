@@ -13,7 +13,6 @@ class CreatePost extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $data['post_type'] = PostTypeEnum::POST;
-        $data['translation'] = $data['translation'] ?? [];
 
         return $data;
     }

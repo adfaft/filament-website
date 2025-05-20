@@ -18,13 +18,14 @@ return new class extends Migration
             $table->string('slug');
             $table->string('post_type');
             $table->string('lang');
-            $table->json('translation');
             $table->text('excerpt')->nullable();
             $table->mediumText('content')->nullable();
-            $table->tinyInteger('status');
+            $table->tinyInteger('status')->index();
             $table->dateTime('published_at')->nullable();
-            $table->json('meta');
+            $table->json('meta')->nullable();
             $table->softDeletes();
+
+            $table->index(['slug', 'post_type', 'lang'], 'slug-type-lang');
         });
     }
 

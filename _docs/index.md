@@ -11,7 +11,7 @@ Website based on filament
 
 - User Management (features/user_management.md)[features/user_management.md]
 - Settings Page (features/settings_management.md)[features/settings_management.md]
-- Post & Page Management
+- Post & Page Management (features/post_management.md)[features/post_management.md]
   - Include revisions
   - multiple languages
   - publish date
